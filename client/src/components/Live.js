@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import GameInfo from './GameInfo'
 
 const Live = () => {
     const [games, setGames] = useState([])
@@ -21,7 +22,8 @@ const Live = () => {
         }
 
         socket.onmessage = ({ data }) => {
-            const newGame = JSON.parse(JSON.parse(data))
+            const parsed = JSON.parse(JSON.parse(data))
+            const newGame = { ...parsed, time: new Date() }
             const id = newGame.gameId
             if (!gamesIncludeNewGame(id)) {
                 setGames(games.concat(newGame))
@@ -48,7 +50,13 @@ const Live = () => {
     return (
         <div className="live-component-container">
             <h2>LIVE</h2>
-            {games.map(g => <div>{g.gameId}</div>)}
+            {games.sort((g1, g2) => g1.time - g2.time).map(game => {
+                return (
+                    <div key={game.gameId}>
+                        <GameInfo game={game} />
+                    </div>
+                )
+            })}
         </div>
     )
 }
