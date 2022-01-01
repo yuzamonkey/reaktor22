@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import GameInfo from './GameInfo'
 
 const Live = () => {
@@ -28,8 +27,7 @@ const Live = () => {
             if (!gamesIncludeNewGame(id)) {
                 setGames(games.concat(newGame))
             } else {
-                const newArray = replaceGameInGames(id, newGame)
-                setGames(newArray)
+                setGames(replaceGameInGames(id, newGame))
             }
         }
         return () => {
@@ -38,19 +36,20 @@ const Live = () => {
     }, [games])
 
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const url = "http://localhost:3001/api/history"
-    //         const result = await axios.get(url)
-    //         console.log(result.data);
-    //     };
-    //     fetchData();
-    // }, []);
+
+
+    const sortedGames = (g1, g2) => {
+        if (g1.type !== g2.type) {
+            return g1.type === "GAME_RESULT" ? -1 : 1
+        }
+        return g2.time - g1.time
+    }
 
     return (
         <div className="live-component-container">
             <h2>LIVE</h2>
-            {games.sort((g1, g2) => g1.time - g2.time).map(game => {
+            {/* {games.sort((g1, g2) => g2.time - g1.time).map(game => { */}
+            {games.sort(sortedGames).map(game => {
                 return (
                     <div key={game.gameId}>
                         <GameInfo game={game} />

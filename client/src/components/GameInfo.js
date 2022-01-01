@@ -15,8 +15,10 @@ import rock from '../images/rock.png'
 import scissors from '../images/scissors.png'
 
 const getTime = (time) => {
-    console.log("TIME", time)
-    return `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+    const getNumber = (num) => {
+        return num < 10 ? `0${num}` : num
+    }
+    return `${getNumber(time.getHours())}:${getNumber(time.getMinutes())}:${getNumber(time.getSeconds())}`
 }
 
 const GameInfo = ({ game }) => {

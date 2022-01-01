@@ -9,6 +9,7 @@ const App = () => {
     return (
         <div className="main-container">
             <div className="title-and-menu-button">
+                <p>Reaktor -22</p>
                 <Title />
                 <MenuButton handleClick={() => setShow(true)} icon="☰" />
             </div>
