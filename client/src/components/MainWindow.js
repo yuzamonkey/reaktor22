@@ -3,6 +3,12 @@ import axios from 'axios'
 
 
 const MainWindow = () => {
+    const ws = "ws://bad-api-assignment.reaktor.com/rps/live"
+    const socket = new WebSocket(ws)
+
+    socket.onmessage = ({ data }) => {
+        console.log("message from socket: ", data)
+    }
 
     useEffect(() => {
         const fetchData = async () => {
