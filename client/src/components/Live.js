@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import axios from 'axios'
 
 
-const MainWindow = () => {
+const Live = () => {
     const ws = "ws://bad-api-assignment.reaktor.com/rps/live"
     const socket = new WebSocket(ws)
 
@@ -19,9 +19,11 @@ const MainWindow = () => {
         fetchData();
     }, []);
 
-    return <div>
-        <h2>Main win</h2>
-    </div>
+    return (
+        <div>
+            <h2>LIVE</h2>
+        </div>
+    )
 }
 
-export default MainWindow
+export default Live
