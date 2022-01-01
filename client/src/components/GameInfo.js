@@ -14,15 +14,24 @@ import paper from '../images/paper.png'
 import rock from '../images/rock.png'
 import scissors from '../images/scissors.png'
 
+const getTime = (time) => {
+    console.log("TIME", time)
+    return `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+}
+
 const GameInfo = ({ game }) => {
-    console.log(game)
+    const time = getTime(game.time)
     return (
         <div className="game-info-container">
-            <p>{game.time.getSeconds()}</p>
             <PlayerInfo
                 name={game.playerA.name}
                 played={game.type === "GAME_RESULT" ? game.playerA.played : null}
             />
+            <div className="game-info-middle-container">
+                <h4>VS</h4>
+                <p>Game started at {time}</p>
+                {game.type === "GAME_BEGIN" && <p><b>Waiting for players to play...</b></p>}
+            </div>
             <PlayerInfo
                 name={game.playerB.name}
                 played={game.type === "GAME_RESULT" ? game.playerB.played : null}
@@ -42,7 +51,7 @@ const PlayerInfo = ({ name, played }) => {
 
 const PlayedImage = ({ played }) => {
     if (played === null) {
-        return "Waiting to play..."
+        return ""
     }
     else if (played === "PAPER") {
         return <img className="played-img" src={paper} alt="paper" />
@@ -53,7 +62,7 @@ const PlayedImage = ({ played }) => {
     else if (played === "SCISSORS") {
         return <img className="played-img" src={scissors} alt="scissors" />
     } else {
-        return "not a valid move"
+        return "Not a valid move"
     }
 
 }

@@ -1,7 +1,9 @@
 * {
     margin: 0;
-    --bc: rgba(151, 229, 229, 0.39);
-    --search-component-width: 30rem;
+    --bc-tp: hsla(200, 50%, 40%, 0.178);
+    --bc-solid: hsl(200, 50%, 40%);
+    --bc-solid-dark: hsl(200, 50%, 24%);
+    --search-component-width: 35rem;
 }
 
 body {
@@ -17,7 +19,7 @@ code {
         monospace;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
     text-align: center;
 }
 
@@ -27,7 +29,7 @@ h1, h2 {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: var(--bc);
+    background-color: var(--bc-tp);
     overflow: scroll;
 }
 
@@ -36,6 +38,10 @@ h1, h2 {
 .title-and-menu-button {
     position: sticky;
     top: 0;
+    padding: 10px 0;
+    background-color: var(--bc-solid);
+    color: rgb(219, 219, 219);
+    box-shadow: 5px 0 5px 0 var(--bc-solid-dark);
 }
 
 /* MENU BUTTON */
@@ -46,11 +52,12 @@ h1, h2 {
     right: 0;
     width: 1.5em;
     height: 1.5em;
-    font-size: 1.5em;
+    font-size: 2em;
     font-weight: 700;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: rgb(219, 219, 219);
 }
 
 .menu-button:hover {
@@ -60,14 +67,22 @@ h1, h2 {
 /* LIVE COMPONENT */
 
 .live-component-container {
-    background-color: var(--bc);
+    background-color: var(--bc-tp);
     display: flex;
     flex-direction: column;
 }
+.live-component-container h2{
+    padding-top: 1em;
+}
 
 .game-info-container {
-    margin: 10px 0;
-    background-color: var(--bc);
+    margin-top: 1em;
+    padding: 0 2em;
+    background-color: var(--bc-tp);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 200px;
 }
 
 .played-img {
@@ -77,7 +92,8 @@ h1, h2 {
 /* SEARCH COMPONENT */
 
 .search-component-container {
-    background-color: lightblue;
+    background-color: var(--bc-solid);
+    box-shadow: 0 5px 5px 0 var(--bc-solid-dark);
     position: absolute;
     top: 0;
     height: 100vh;
