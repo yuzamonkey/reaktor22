@@ -1,9 +1,9 @@
-const MenuButton = ({ handleClick, text }) => {
+const MenuButton = ({ handleClick, icon }) => {
     return (
         <div
             className="show menu-button"
             onClick={() => handleClick()}>
-            {text}
+            {icon}
         </div>
     )
 }

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import axios from 'axios'
 
-
 const Live = () => {
     const ws = "ws://bad-api-assignment.reaktor.com/rps/live"
     const socket = new WebSocket(ws)
@@ -20,7 +19,7 @@ const Live = () => {
     }, []);
 
     return (
-        <div>
+        <div className="live-component-container">
             <h2>LIVE</h2>
         </div>
     )

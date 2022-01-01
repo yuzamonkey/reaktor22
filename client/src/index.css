@@ -17,17 +17,25 @@ code {
         monospace;
 }
 
+h1, h2 {
+    text-align: center;
+}
+
 /* APP */
 
 .main-container {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: var(--bc)
+    background-color: var(--bc);
+    overflow: scroll;
 }
 
-.title {
-    text-align: center;
+/* TITLE AND MENU BUTTON */
+
+.title-and-menu-button {
+    position: sticky;
+    top: 0;
 }
 
 /* MENU BUTTON */
@@ -52,14 +60,9 @@ code {
 /* LIVE COMPONENT */
 
 .live-component-container {
-    background-color: var(--bc)
-}
-
-.live-component-items {
+    background-color: var(--bc);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    overflow: scroll;
 }
 
 

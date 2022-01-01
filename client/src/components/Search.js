@@ -1,12 +1,10 @@
-import { useState } from "react"
 import MenuButton from "./MenuButton"
 
-const Search = ({ setShow }) => {
+const Search = ({ show, setShow }) => {
     return (
-        <div>
-            <MenuButton handleClick={() => setShow(false)} text="x" />
+        <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
+            <MenuButton handleClick={() => setShow(false)} icon="x" />
             Search component
-
         </div>
     )
 }

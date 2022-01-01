@@ -1,20 +1,19 @@
 import { useState } from "react";
+import Title from "./components/Title";
+import MenuButton from "./components/MenuButton";
 import Live from "./components/Live";
 import Search from "./components/Search";
-import MenuButton from "./components/MenuButton";
 
 const App = () => {
     const [show, setShow] = useState(false)
     return (
         <div className="main-container">
-            <h1 className="title">Rock-Paper-Scissors</h1>
-            <MenuButton handleClick={() => setShow(true)} text="☰" />
-            <div className="live-component-container">
-                <Live />
+            <div className="title-and-menu-button">
+                <Title />
+                <MenuButton handleClick={() => setShow(true)} icon="☰" />
             </div>
-            <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
-                <Search setShow={setShow} />
-            </div>
+            <Live />
+            <Search show={show} setShow={setShow} />
         </div>
     );
 }
