@@ -13,10 +13,14 @@ const Search = ({ show, setShow }) => {
     
     // }, []);
 
+    const handleInputChange = (value) => {
+        console.log(value)
+    }
+
     return (
         <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
             <MenuButton handleClick={() => setShow(false)} icon="x" />
-            
+            <input className="search-input" type="text" onChange={e => handleInputChange(e.target.value)} />
         </div>
     )
 }
