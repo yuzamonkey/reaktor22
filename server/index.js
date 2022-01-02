@@ -12,6 +12,11 @@ app.get('/api/history', async (req, res) => {
     res.send(response.data)
 })
 
+app.get('/api/history/:cursor', async (req, res) => {
+    const response = await axios.get(url + `?cursor=${req.params.cursor}`)
+    res.send(response.data)
+})
+
 const PORT = 3001
 
 app.listen(PORT, () => {
