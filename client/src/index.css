@@ -102,6 +102,8 @@ h1, h2, h3, h4 {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    overflow: scroll;
 }
 
 .search-component-container.visible {
@@ -109,7 +111,7 @@ h1, h2, h3, h4 {
 }
 
 .search-component-container.hidden {
-    right: calc(var(--search-component-width) * -1);
+    right: calc(var(--search-component-width) * -1.2);
 }
 
 .search-component-container .menu-button {
