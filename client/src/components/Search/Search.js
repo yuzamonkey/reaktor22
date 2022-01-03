@@ -12,59 +12,69 @@ const Search = ({ show, setShow }) => {
     //
 
     const [cursors, setCursors] = useState([])
-    const [games, setGames] = useState([])
 
     useEffect(() => {
         // handle cursors from local storage
-        let gamesFromStorage = []
         let playersFromStorage = []
-        if (localStorage.length > 0) {
-            for (let i = 0; i < localStorage.length; i++) {
-                const cursor = localStorage.key(i);
-                const data = JSON.parse(localStorage.getItem(cursor))
-                const gamesFromData = data.data
-                gamesFromStorage = gamesFromStorage.concat(gamesFromData)
-
-                for (let game of gamesFromData) {
-                    const p1 = game.playerA.name
-                    const p2 = game.playerB.name
-                    if (!playersFromStorage.includes(p1)) {
-                        playersFromStorage.push(p1)
-                    }
-                    if (!playersFromStorage.includes(p2)) {
-                        playersFromStorage.push(p2)
-                    }
-
-                }
-            }
-            setGames(gamesFromStorage)
-            setPlayers(playersFromStorage)
+        for (let i = 0; i < localStorage.length; i++) {
+            const playerName = localStorage.key(i);
+            playersFromStorage.push(playerName)
         }
+        setPlayers(playersFromStorage)
+        console.log("END READING FROM STORAGE")
     }, [])
 
-    // useEffect(() => {
-    //     // get new data
-    //     // const handleData = (data) => {
-    //     // }
-    //     console.log("START")
-    //     const fetchData = async () => {
-    //         const currentCursor = cursors.length > 0 ? cursors[cursors.length - 1] : "first"
+    useEffect(() => {
+        console.log("START DATA FETCH")
 
-    //         let url = currentCursor === "first"
-    //             ? `http://localhost:3001/api/history/`
-    //             : `http://localhost:3001/api/history/${currentCursor}`
+        const saveDataToStorage = (cursor, game) => {
+            const updateStorage = (name, gameParams) => {
+                if (localStorage.getItem(name) === null) {
+                    const newArr = [gameParams]
+                    localStorage.setItem(name, JSON.stringify(newArr))
+                } else {
+                    const arr = JSON.parse(localStorage.getItem(name))
+                    const newArr = arr.concat(gameParams)
+                    localStorage.setItem(name, JSON.stringify(newArr))
+                }
+            }
 
-    //         const result = await axios.get(url)
+            const gameParams = { cursor: cursor, gameId: game.gameId }
+            updateStorage(game.playerA.name, gameParams)
+            updateStorage(game.playerB.name, gameParams)
+        }
 
-    //         const nextCursor = result.data.cursor.split("=")[1]
+        const updatePlayersList = (playerList) => {
+            for (let p of playerList) {
+                if (!players.includes(p)) {
+                    setPlayers(players.concat(p))
+                }
+            }
+        }
+        const fetchData = async () => {
+            if (cursors.length === 0) {
+                const url = `http://localhost:3001/api/history/`
+                const result = await axios.get(url)
+                const nextCursor = result.data.cursor.split("=")[1]
+                setCursors(cursors.concat(nextCursor))
+            } else {
+                const currentCursor = cursors[cursors.length - 1]
+                const url = `http://localhost:3001/api/history/${currentCursor}`
+                const result = await axios.get(url)
 
-    //         localStorage.setItem(currentCursor, JSON.stringify(result.data))
+                const games = result.data.data
+                for (let game of games) {
+                    saveDataToStorage(currentCursor, game)
+                    updatePlayersList([game.playerA.name, game.playerB.name])
+                }
 
-    //         setCursors(cursors.concat(nextCursor))
-    //     }
-    //     fetchData()
-    //     //}, [cursors]);
-    // }, []);
+                const nextCursor = result.data.cursor.split("=")[1]
+                setCursors(cursors.concat(nextCursor))
+            }
+        }
+        fetchData()
+
+    }, [cursors]);
 
     const handleInputChange = (value) => {
         setFilter(value)
@@ -79,22 +89,33 @@ const Search = ({ show, setShow }) => {
         <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
             <PlayerStats visible={showPlayerStats} setVisible={setShowPlayerStats} player={selectedPlayer} />
             <MenuButton handleClick={() => setShow(false)} icon="x" />
-            <input
-                className="search-input"
-                type="text"
-                placeholder="Search by name"
-                onChange={e => handleInputChange(e.target.value)} />
-            {/* {games.map(g => <div>{g.gameId}</div>)} */}
-            <div className="player-list">
-                {players.sort().map(p => {
-                    return p.toLowerCase().includes(filter.toLowerCase())
-                        && <div
-                            className="player-search-item"
-                            onClick={() => handlePlayerClick(p)}
-                            key={p}>{p}
-                        </div>
-                })}
-            </div>
+            <FilterInput handleChange={handleInputChange} />
+            <PlayerList players={players} filter={filter} handleClick={handlePlayerClick} />
+        </div>
+    )
+}
+
+const FilterInput = ({ handleChange }) => {
+    return (
+        <input
+            className="search-input"
+            type="text"
+            placeholder="Search by name"
+            onChange={e => handleChange(e.target.value)} />
+    )
+}
+
+const PlayerList = ({ players, filter, handleClick }) => {
+    return (
+        <div className="player-list">
+            {players.sort().map(p => {
+                return p.toLowerCase().includes(filter.toLowerCase())
+                    && <div
+                        className="player-search-item"
+                        onClick={() => handleClick(p)}
+                        key={p}>{p}
+                    </div>
+            })}
         </div>
     )
 }
