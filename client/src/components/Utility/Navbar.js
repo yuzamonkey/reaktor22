@@ -4,7 +4,10 @@ import Title from "./Title"
 const Navbar = ({ showSearch }) => {
     return (
         <div className="title-and-menu-button">
-            <p>Reaktor -22</p>
+            <div className="info-text">
+                <p>Reaktor -22</p>
+                <a href="https://github.com/yuzamonkey" target="_blank" rel="noreferrer">Source code</a>
+            </div>
             <Title />
             <MenuButton handleClick={showSearch} icon="☰" />
         </div>
