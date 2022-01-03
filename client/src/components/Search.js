@@ -14,53 +14,67 @@ const Search = ({ show, setShow }) => {
 
     const [cursors, setCursors] = useState([])
     const [games, setGames] = useState([])
+    const [players, setPlayers] = useState([])
+    const [filter, setFilter] = useState("")
 
     useEffect(() => {
-        let storageCursors = []
-        let storageGames = []
+        // handle cursors from local storage
+        let gamesFromStorage = []
+        let playersFromStorage = []
         if (localStorage.length > 0) {
             for (let i = 0; i < localStorage.length; i++) {
                 const cursor = localStorage.key(i);
-                storageCursors.push(cursor)
-
                 const data = JSON.parse(localStorage.getItem(cursor))
-                const games = data.data
-                storageGames = storageGames.concat(games)
+                const gamesFromData = data.data
+                gamesFromStorage = gamesFromStorage.concat(gamesFromData)
+
+                for (let game of gamesFromData) {
+                    const p1 = game.playerA.name
+                    const p2 = game.playerB.name
+                    if (!playersFromStorage.includes(p1)) {
+                        playersFromStorage.push(p1)
+                    }
+                    if (!playersFromStorage.includes(p2)) {
+                        playersFromStorage.push(p2)
+                    }
+
+                }
             }
-            setCursors(storageCursors)
-            setGames(storageGames)
+            setGames(gamesFromStorage)
+            setPlayers(playersFromStorage)
         }
     }, [])
 
-    useEffect(() => {
-        // const handleData = (data) => {
-        // }
-        const fetchData = async () => {
-            const currentCursor = cursors.length > 0 ? cursors[cursors.length - 1] : "first"
+    // useEffect(() => {
+    //     // get new data
+    //     // const handleData = (data) => {
+    //     // }
+    //     console.log("START")
+    //     const fetchData = async () => {
+    //         const currentCursor = cursors.length > 0 ? cursors[cursors.length - 1] : "first"
 
-            let url = currentCursor === "first"
-                ? `http://localhost:3001/api/history/`
-                : `http://localhost:3001/api/history/${currentCursor}`
-            const result = await axios.get(url)
-            const data = result.data
+    //         let url = currentCursor === "first"
+    //             ? `http://localhost:3001/api/history/`
+    //             : `http://localhost:3001/api/history/${currentCursor}`
 
-            setGames(games.concat(data.data))
+    //         const result = await axios.get(url)
 
-            localStorage.setItem(currentCursor, JSON.stringify(data))
+    //         const nextCursor = result.data.cursor.split("=")[1]
 
-            const nextCursor = result.data.cursor.split("=")[1]
-            setCursors(cursors.concat(nextCursor))
-            // if (!cursors.includes(id)) {
-            //     setCursors(cursors.concat(id))
-            // } else {
-            //     console.log("BREAK")
-            // }
-        }
-        fetchData()
-    }, [cursors]);
+    //         localStorage.setItem(currentCursor, JSON.stringify(result.data))
+
+    //         setCursors(cursors.concat(nextCursor))
+    //     }
+    //     fetchData()
+    //     //}, [cursors]);
+    // }, []);
 
     const handleInputChange = (value) => {
-        console.log(value)
+        setFilter(value)
+    }
+
+    const handlePlayerClick = (player) => {
+        console.log("PLAYER CLICKED", player)
     }
 
     return (
@@ -71,7 +85,16 @@ const Search = ({ show, setShow }) => {
                 type="text"
                 placeholder="Search by name"
                 onChange={e => handleInputChange(e.target.value)} />
-            {games.map(g => <div>{g.gameId}: {g.playerA.name} vs {g.playerB.name}</div>)}
+            {/* {games.map(g => <div>{g.gameId}</div>)} */}
+            {players.sort().map(p => {
+                return filter.length >= 0
+                    && p.toLowerCase().includes(filter.toLowerCase())
+                    && <div
+                        className="player-search-item"
+                        onClick={() => handlePlayerClick(p)}
+                        key={p}>{p}
+                    </div>
+            })}
         </div>
     )
 }
