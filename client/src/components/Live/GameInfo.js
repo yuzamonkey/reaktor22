@@ -1,6 +1,7 @@
 import paper from '../../images/paper.png'
 import rock from '../../images/rock.png'
 import scissors from '../../images/scissors.png'
+import { playerWonGame } from '../../logic/rps'
 
 
 const GameInfo = ({ game }) => {
@@ -21,6 +22,7 @@ const GameInfo = ({ game }) => {
             <PlayerInfo
                 name={game.playerA.name}
                 played={game.type === "GAME_RESULT" ? game.playerA.played : null}
+                won={playerWonGame(game.playerA.name, game)}
             />
             <div className="game-info-middle-container">
                 <h4>VS</h4>
@@ -29,14 +31,15 @@ const GameInfo = ({ game }) => {
             <PlayerInfo
                 name={game.playerB.name}
                 played={game.type === "GAME_RESULT" ? game.playerB.played : null}
+                won={playerWonGame(game.playerB.name, game)}
             />
         </div>
     )
 }
 
-const PlayerInfo = ({ name, played }) => {
+const PlayerInfo = ({ name, played, won }) => {
     return (
-        <div>
+        <div className={won ? "player-info-container won" : "player-info-container"}>
             <h3>{name}</h3>
             <PlayedImage played={played} />
         </div>
