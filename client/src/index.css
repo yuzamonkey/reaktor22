@@ -1,6 +1,6 @@
 * {
     margin: 0;
-    --bc-tp: hsla(200, 50%, 40%, 0.178);
+    --bc-tp: hsla(200, 30%, 40%, 0.178);
     --bc-solid: hsl(200, 50%, 40%);
     --bc-solid-dark: hsl(200, 50%, 24%);
     --search-component-width: 35rem;
@@ -12,6 +12,7 @@ body {
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
 }
 
 code {
@@ -65,7 +66,6 @@ h1, h2, h3, h4 {
 /* LIVE COMPONENT */
 
 .live-component-container {
-    background-color: var(--bc-tp);
     display: flex;
     flex-direction: column;
 }

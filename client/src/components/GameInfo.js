@@ -14,15 +14,19 @@ import paper from '../images/paper.png'
 import rock from '../images/rock.png'
 import scissors from '../images/scissors.png'
 
-const getTime = (time) => {
+const getTimeString = (time) => {
     const getNumber = (num) => {
         return num < 10 ? `0${num}` : num
     }
-    return `${getNumber(time.getHours())}:${getNumber(time.getMinutes())}:${getNumber(time.getSeconds())}`
+    return `${time.getDate()}.${time.getMonth()+1}.${time.getFullYear()} ${getNumber(time.getHours())}:${getNumber(time.getMinutes())}:${getNumber(time.getSeconds())}`
+}
+
+const parseTime = (time) => {
+    const date = new Date(time)
+    return getTimeString(date)
 }
 
 const GameInfo = ({ game }) => {
-    const time = getTime(game.time)
     return (
         <div className="game-info-container">
             <PlayerInfo
@@ -31,8 +35,7 @@ const GameInfo = ({ game }) => {
             />
             <div className="game-info-middle-container">
                 <h4>VS</h4>
-                <p>Game started at {time}</p>
-                {game.type === "GAME_BEGIN" && <p><b>Waiting for players to play...</b></p>}
+                <p>{game.type === "GAME_RESULT" ? parseTime(game.t): "Waiting for players to play..."}</p>
             </div>
             <PlayerInfo
                 name={game.playerB.name}
