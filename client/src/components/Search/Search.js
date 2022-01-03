@@ -4,14 +4,15 @@ import MenuButton from '../Utility/MenuButton';
 import PlayerStats from './PlayerStats';
 
 const Search = ({ show, setShow }) => {
-
-    const [cursors, setCursors] = useState([])
-    const [games, setGames] = useState([])
+    //
     const [players, setPlayers] = useState([])
     const [filter, setFilter] = useState("")
     const [selectedPlayer, setSelectedPlayer] = useState("")
-
     const [showPlayerStats, setShowPlayerStats] = useState(false)
+    //
+
+    const [cursors, setCursors] = useState([])
+    const [games, setGames] = useState([])
 
     useEffect(() => {
         // handle cursors from local storage
