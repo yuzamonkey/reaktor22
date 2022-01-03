@@ -1,6 +1,7 @@
 import MenuButton from "./MenuButton"
 import axios from 'axios'
 import { useEffect, useState } from "react";
+import PlayerStats from "./PlayerStats";
 
 /*
 The historical results must include all games that a player has played 
@@ -16,6 +17,9 @@ const Search = ({ show, setShow }) => {
     const [games, setGames] = useState([])
     const [players, setPlayers] = useState([])
     const [filter, setFilter] = useState("")
+    const [selectedPlayer, setSelectedPlayer] = useState("")
+
+    const [showPlayerStats, setShowPlayerStats] = useState(false)
 
     useEffect(() => {
         // handle cursors from local storage
@@ -74,11 +78,13 @@ const Search = ({ show, setShow }) => {
     }
 
     const handlePlayerClick = (player) => {
-        console.log("PLAYER CLICKED", player)
+        setSelectedPlayer(player)
+        setShowPlayerStats(true)
     }
 
     return (
         <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
+            <PlayerStats visible={showPlayerStats} setVisible={setShowPlayerStats} player={selectedPlayer} />
             <MenuButton handleClick={() => setShow(false)} icon="x" />
             <input
                 className="search-input"
@@ -86,15 +92,16 @@ const Search = ({ show, setShow }) => {
                 placeholder="Search by name"
                 onChange={e => handleInputChange(e.target.value)} />
             {/* {games.map(g => <div>{g.gameId}</div>)} */}
-            {players.sort().map(p => {
-                return filter.length >= 0
-                    && p.toLowerCase().includes(filter.toLowerCase())
-                    && <div
-                        className="player-search-item"
-                        onClick={() => handlePlayerClick(p)}
-                        key={p}>{p}
-                    </div>
-            })}
+            <div className="player-list">
+                {players.sort().map(p => {
+                    return p.toLowerCase().includes(filter.toLowerCase())
+                        && <div
+                            className="player-search-item"
+                            onClick={() => handlePlayerClick(p)}
+                            key={p}>{p}
+                        </div>
+                })}
+            </div>
         </div>
     )
 }
