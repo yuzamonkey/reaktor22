@@ -3,7 +3,6 @@ import GameInfo from './GameInfo'
 
 const Live = () => {
     const [games, setGames] = useState([])
-
     const link = "ws://bad-api-assignment.reaktor.com/rps/live"
 
     useEffect(() => {
@@ -35,9 +34,6 @@ const Live = () => {
         }
     }, [games])
 
-
-
-
     const sortedGames = (g1, g2) => {
         if (g1.type !== g2.type) {
             return g1.type === "GAME_RESULT" ? -1 : 1
@@ -50,7 +46,6 @@ const Live = () => {
     return (
         <div className="live-component-container">
             <h2>LIVE</h2>
-            {/* {games.sort((g1, g2) => g2.time - g1.time).map(game => { */}
             {games.sort(sortedGames).map(game => {
                 return (
                     <div key={game.gameId}>

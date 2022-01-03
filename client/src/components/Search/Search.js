@@ -13,8 +13,9 @@ const Search = ({ show, setShow }) => {
 
     const [cursors, setCursors] = useState([])
 
+    const [nextCursor, setNextCursor] = useState("")
+
     useEffect(() => {
-        // handle cursors from local storage
         let playersFromStorage = []
         for (let i = 0; i < localStorage.length; i++) {
             const playerName = localStorage.key(i);
@@ -51,6 +52,7 @@ const Search = ({ show, setShow }) => {
                 }
             }
         }
+        
         const fetchData = async () => {
             if (cursors.length === 0) {
                 const url = `http://localhost:3001/api/history/`
@@ -81,8 +83,8 @@ const Search = ({ show, setShow }) => {
     }
 
     const handlePlayerClick = (player) => {
-        setSelectedPlayer(player)
         setShowPlayerStats(true)
+        setSelectedPlayer(player)
     }
 
     return (
