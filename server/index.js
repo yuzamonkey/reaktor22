@@ -17,6 +17,13 @@ app.get('/api/history/:cursor', async (req, res) => {
     res.send(response.data)
 })
 
+app.get('/api/history/:cursor/:id', async (req, res) => {
+    const response = await axios.get(url + `?cursor=${req.params.cursor}`)
+    const games = response.data.data
+    const game = games.filter(g => g.gameId === req.params.id)[0]
+    res.send(game)
+})
+
 const PORT = 3001
 
 app.listen(PORT, () => {

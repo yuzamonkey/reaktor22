@@ -3,7 +3,7 @@ const PlayerStats = ({ visible, setVisible, player }) => {
         <div className={visible ? "player-stats-component visible" : "player-stats-component hidden"}>
             <h1>{player}</h1>
             <h3>Win ratio: </h3>
-            <h3>Total number of matches: </h3>
+            <h3>Number of matches: </h3>
             <h3>Most played hand: </h3>
             <BackButton handleClick={() => setVisible(false)} />
         </div>
