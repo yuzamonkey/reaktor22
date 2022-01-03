@@ -1,15 +1,7 @@
-import MenuButton from "./MenuButton"
 import axios from 'axios'
 import { useEffect, useState } from "react";
-import PlayerStats from "./PlayerStats";
-
-/*
-The historical results must include all games that a player has played 
-and it must also include the following aggregate data: 
-    win ratio, 
-    total number of matches played, 
-    and the most played hand (rock, paper, or scissors).
-*/
+import MenuButton from '../Utility/MenuButton';
+import PlayerStats from './PlayerStats';
 
 const Search = ({ show, setShow }) => {
 

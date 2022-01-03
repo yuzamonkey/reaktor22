@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Title from "./components/Title";
-import MenuButton from "./components/MenuButton";
-import Live from "./components/Live";
-import Search from "./components/Search";
+import Title from "./components/Utility/Title";
+import MenuButton from "./components/Utility/MenuButton";
+import Live from "./components/Live/Live";
+import Search from "./components/Search/Search";
 
 const App = () => {
     const [show, setShow] = useState(false)

@@ -10,9 +10,9 @@
 // type: "GAME_RESULT"
 // type: "GAME_BEGIN"
 
-import paper from '../images/paper.png'
-import rock from '../images/rock.png'
-import scissors from '../images/scissors.png'
+import paper from '../../images/paper.png'
+import rock from '../../images/rock.png'
+import scissors from '../../images/scissors.png'
 
 const getTimeString = (time) => {
     const getNumber = (num) => {
