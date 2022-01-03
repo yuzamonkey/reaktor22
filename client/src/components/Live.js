@@ -42,7 +42,9 @@ const Live = () => {
         if (g1.type !== g2.type) {
             return g1.type === "GAME_RESULT" ? -1 : 1
         }
-        return g2.time - g1.time
+        else if (g1.type === "GAME_RESULT") {
+            return g2.t - g1.t
+        }
     }
 
     return (
