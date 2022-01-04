@@ -36,7 +36,6 @@ const Search = ({ show, setShow }) => {
     }, [])
 
     useEffect(() => {
-        console.log("START DATA FETCH")
         const updatePlayerStats = (name, played, game) => {
             const won = playerWonGame(name, game)
 
@@ -84,7 +83,42 @@ const Search = ({ show, setShow }) => {
         // }
 
         const updateCursors = (current, next, cursors) => {
+            const updatedCursors = cursors.map(obj => {
+                if (current === obj.next) {
+                    return { ...obj, to: current, next: next }
+                }
+                return obj
+            })
 
+            let removeList = []
+
+            const objIsToBeRemoved = (obj, removeList) => {
+                for (let item of removeList) {
+                    if (obj.from === item.from
+                        && obj.to === item.to
+                        && obj.next === item.next) {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            const joined = updatedCursors.map(obj => {
+                const toJoin = updatedCursors.filter(c => obj.next === c.from)[0]
+                if (toJoin) {
+                    removeList.push(toJoin)
+                    const joinedObj = {
+                        from: obj.from,
+                        to: toJoin.to,
+                        next: toJoin.next
+                    }
+                    return joinedObj
+                }
+                return obj
+            })
+
+            const filteredCursors = joined.filter(c => c !== undefined && !objIsToBeRemoved(c, removeList))
+            return filteredCursors
         }
 
         const fetchData = async () => {
@@ -132,6 +166,11 @@ const Search = ({ show, setShow }) => {
                 return
             }
 
+            // last page of api
+            if (currentCursor === null) {
+                return
+            }
+
             // update storage from api data
             const games = result.data.data
             for (let game of games) {
@@ -149,14 +188,14 @@ const Search = ({ show, setShow }) => {
                 localStorage.setItem("cursors", JSON.stringify(cursors))
                 setCurrentCursor(nextCursor)
                 return
+            } else {
+                const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
+                localStorage.setItem("cursors", JSON.stringify(updatedCursors))
+                setCurrentCursor(updatedCursors[0].next)
             }
-
-            updateCursors(currentCursor, nextCursor, cursorsFromStorage)
         }
-
         fetchData()
-
-    }, []);
+    }, [currentCursor]);
 
     const handleInputChange = (value) => {
         setFilter(value)
@@ -190,7 +229,6 @@ const FilterInput = ({ handleChange }) => {
 const PlayerList = ({ players, filter, handleClick }) => {
     return (
         <div className="player-list">
-            <h1>{players.length}</h1>
             {players.sort().map(p => {
                 return p.toLowerCase().includes(filter.toLowerCase())
                     && <div
