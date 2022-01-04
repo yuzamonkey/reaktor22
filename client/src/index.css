@@ -111,7 +111,7 @@ h1, h2, h3, h4 {
     align-items: center;
 }
 .player-info-container.won {
-    box-shadow: 0 0 10px 0 green inset;
+    box-shadow: 0 0 10px 0 var(--bc-solid) inset;
 }
 
 .played-img {

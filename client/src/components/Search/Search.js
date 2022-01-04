@@ -15,7 +15,7 @@ const Search = ({ show, setShow }) => {
 
     const [currentCursor, setCurrentCursor] = useState("")
 
-    useEffect(() => {
+    const updatePlayersFromStorage = () => {
         const isName = (str) => {
             return str.split(" ").length === 2
         }
@@ -29,19 +29,15 @@ const Search = ({ show, setShow }) => {
             }
         }
         setPlayers(playersFromStorage)
-        console.log("END READING FROM STORAGE")
+    }
+
+    useEffect(() => {
+        updatePlayersFromStorage()
     }, [])
 
 
     useEffect(() => {
         console.log("START DATA FETCH")
-
-        const updatePlayersList = (name) => {
-            if (!players.includes(name)) {
-                setPlayers(players.concat(name))
-            }
-        }
-
         const updatePlayerStats = (name, played, game) => {
             const won = playerWonGame(name, game)
 
@@ -72,12 +68,11 @@ const Search = ({ show, setShow }) => {
         }
 
         const updateStorage = (game) => {
-            // updatePlayersList(game.playerA.name)
-            // updatePlayersList(game.playerB.name)
-
             updatePlayerStats(game.playerA.name, game.playerA.played, game)
             updatePlayerStats(game.playerB.name, game.playerB.played, game)
-
+            if (!players.includes(game.playerA.name) || !players.includes(game.playerB.name)) {
+                updatePlayersFromStorage()
+            }
         }
 
 

@@ -6,7 +6,7 @@ const Navbar = ({ showSearch }) => {
         <div className="title-and-menu-button">
             <div className="info-text">
                 <p>Reaktor -22</p>
-                <a href="https://github.com/yuzamonkey" target="_blank" rel="noreferrer">Source code</a>
+                <a href="https://github.com/yuzamonkey/reaktor22" target="_blank" rel="noreferrer">Source code</a>
             </div>
             <Title />
             <MenuButton handleClick={showSearch} icon="☰" />
