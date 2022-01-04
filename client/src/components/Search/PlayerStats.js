@@ -28,10 +28,20 @@ const Stats = ({ name }) => {
         }
     }
 
+    const getWinRatio = () => {
+        if (stats) {
+            const won = stats.gamesWon
+            const numOfGames = stats.gamesPlayed
+
+            return (won / (numOfGames - won)).toFixed(2)
+        }
+    }
+
     return (
         <span>
             <h3>Games won: {stats?.gamesWon}</h3>
-            <h3>Number of matches: {stats?.gamesPlayed}</h3>
+            <h3>Win ratio (wins/ties and losses): {getWinRatio()}</h3>
+            <h3>Number of games: {stats?.gamesPlayed}</h3>
             <h3>Most played hand: {stats && mostPlayedHand(stats.handsPlayed)}</h3>
         </span>
     )

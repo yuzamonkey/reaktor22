@@ -122,43 +122,8 @@ const Search = ({ show, setShow }) => {
         }
 
         const fetchData = async () => {
-            // const firstCursor = localStorage.getItem("firstCursor")
-            // const lastCursor = localStorage.getItem("lastCursor")
-
-            // if (currentCursor !== "") {
-            //     const result = await axios.get(API_URL)
-            //     const cursor = result.data.cursor.split("=")[1]
-
-            //     if (firstCursor === null) {
-            //         localStorage.setItem("firstCursor", cursor)
-            //     }
-            //     if (lastCursor === null) {
-            //         localStorage.setItem("lastCursor", cursor)
-            //     }
-            //     setCurrentCursor(firstCursor)
-
-            // } else {
-            //     const result = await axios.get(API_URL + currentCursor)
-
-            //     const games = result.data.data
-            //     for (let game of games) {
-            //         updateStorage(game)
-            //     }
-
-            //     const nextCursor = result.data.cursor.split("=")[1]
-
-            //     if (firstCursor === lastCursor) {
-            //         localStorage.setItem("firstCursor", nextCursor)
-            //         localStorage.setItem("lastCursor", nextCursor)
-            //     } else if (nextCursor === lastCursor) {
-            //         localStorage.setItem("firstCursor", nextCursor)
-            //     }
-
-            //     console.log(nextCursor)
-            // }
-
             const result = await axios.get(API_URL + currentCursor)
-            const nextCursor = result.data.cursor.split("=")[1]
+            const nextCursor = result.data.cursor === null ? null : result.data.cursor.split("=")[1]
 
             // first page of api, move to next page
             if (currentCursor === "") {
@@ -167,7 +132,7 @@ const Search = ({ show, setShow }) => {
             }
 
             // last page of api
-            if (currentCursor === null) {
+            if (nextCursor === null) {
                 return
             }
 
@@ -189,6 +154,7 @@ const Search = ({ show, setShow }) => {
                 setCurrentCursor(nextCursor)
                 return
             } else {
+                //jatka tästä, uusi api sivu ei liitä vanhempiin
                 const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
                 localStorage.setItem("cursors", JSON.stringify(updatedCursors))
                 setCurrentCursor(updatedCursors[0].next)
