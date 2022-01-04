@@ -35,7 +35,6 @@ const Search = ({ show, setShow }) => {
         updatePlayersFromStorage()
     }, [])
 
-
     useEffect(() => {
         console.log("START DATA FETCH")
         const updatePlayerStats = (name, played, game) => {
@@ -75,44 +74,86 @@ const Search = ({ show, setShow }) => {
             }
         }
 
+        // const nextCursorIsAlreadyHandled = (next, cursors) => {
+        //     for (let c of cursors) {
+        //         if (next === c.first) {
+        //             return true
+        //         }
+        //     }
+        //     return false
+        // }
 
-        const fetchData = async () => {
-            const firstCursor = localStorage.getItem("firstCursor")
-            const lastCursor = localStorage.getItem("lastCursor")
-
-            if (currentCursor !== "") {
-                const result = await axios.get(API_URL)
-                const cursor = result.data.cursor.split("=")[1]
-
-                if (firstCursor === null) {
-                    localStorage.setItem("firstCursor", cursor)
-                }
-                if (lastCursor === null) {
-                    localStorage.setItem("lastCursor", cursor)
-                }
-                setCurrentCursor(firstCursor)
-
-            } else {
-                const result = await axios.get(API_URL + currentCursor)
-
-                const games = result.data.data
-                for (let game of games) {
-                    updateStorage(game)
-                }
-
-                const nextCursor = result.data.cursor.split("=")[1]
-
-                if (firstCursor === lastCursor) {
-                    localStorage.setItem("firstCursor", nextCursor)
-                    localStorage.setItem("lastCursor", nextCursor)
-                } else if (nextCursor === lastCursor) {
-                    localStorage.setItem("firstCursor", nextCursor)
-                }
-
-                console.log(nextCursor)
-            }
+        const updateCursors = (current, next, cursors) => {
 
         }
+
+        const fetchData = async () => {
+            // const firstCursor = localStorage.getItem("firstCursor")
+            // const lastCursor = localStorage.getItem("lastCursor")
+
+            // if (currentCursor !== "") {
+            //     const result = await axios.get(API_URL)
+            //     const cursor = result.data.cursor.split("=")[1]
+
+            //     if (firstCursor === null) {
+            //         localStorage.setItem("firstCursor", cursor)
+            //     }
+            //     if (lastCursor === null) {
+            //         localStorage.setItem("lastCursor", cursor)
+            //     }
+            //     setCurrentCursor(firstCursor)
+
+            // } else {
+            //     const result = await axios.get(API_URL + currentCursor)
+
+            //     const games = result.data.data
+            //     for (let game of games) {
+            //         updateStorage(game)
+            //     }
+
+            //     const nextCursor = result.data.cursor.split("=")[1]
+
+            //     if (firstCursor === lastCursor) {
+            //         localStorage.setItem("firstCursor", nextCursor)
+            //         localStorage.setItem("lastCursor", nextCursor)
+            //     } else if (nextCursor === lastCursor) {
+            //         localStorage.setItem("firstCursor", nextCursor)
+            //     }
+
+            //     console.log(nextCursor)
+            // }
+
+            const result = await axios.get(API_URL + currentCursor)
+            const nextCursor = result.data.cursor.split("=")[1]
+
+            // first page of api, move to next page
+            if (currentCursor === "") {
+                setCurrentCursor(nextCursor)
+                return
+            }
+
+            // update storage from api data
+            const games = result.data.data
+            for (let game of games) {
+                updateStorage(game)
+            }
+
+            const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+
+            if (cursorsFromStorage === null) {
+                const cursors = [{
+                    from: currentCursor,
+                    to: currentCursor,
+                    next: nextCursor
+                }]
+                localStorage.setItem("cursors", JSON.stringify(cursors))
+                setCurrentCursor(nextCursor)
+                return
+            }
+
+            updateCursors(currentCursor, nextCursor, cursorsFromStorage)
+        }
+
         fetchData()
 
     }, []);
