@@ -39,10 +39,10 @@ const Stats = ({ name }) => {
 
     return (
         <span className="player-stats">
+            <h3>Games played: <b>{stats?.gamesPlayed}</b></h3>
             <h3>Games won: <b>{stats?.gamesWon}</b></h3>
             <h3>Winning percentage: <b>{getWinPercent()}%</b></h3>
             <h3>Win ratio: <b>{getWinRatio()}</b></h3>
-            <h3>Number of games: <b>{stats?.gamesPlayed}</b></h3>
             <h3>Most played hand: <b>{stats && mostPlayedHand(stats.handsPlayed)}</b></h3>
         </span>
     )

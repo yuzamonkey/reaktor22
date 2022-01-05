@@ -29,6 +29,16 @@ const Search = ({ show, setShow }) => {
         setPlayers(playersFromStorage)
     }
 
+    const currentCursorHasBeenFetched = (current, cursors) => {
+        if (cursors) {
+            for (let c of cursors) {
+                if (c.from === current) {
+                    return true
+                }
+            }
+        } return false
+    }
+
     useEffect(() => {
         updatePlayersNames()
     }, [])
@@ -71,16 +81,6 @@ const Search = ({ show, setShow }) => {
             }
         }
 
-        const currentHasBeenFetched = (current, cursors) => {
-            if (cursors) {
-                for (let c of cursors) {
-                    if (c.from === current) {
-                        return true
-                    }
-                }
-            } return false
-        }
-
         const updateCursors = (current, next, cursors) => {
             if (!cursors) {
                 const newObj = {
@@ -91,8 +91,7 @@ const Search = ({ show, setShow }) => {
                 return [newObj]
             }
 
-
-            if (currentHasBeenFetched(current, cursors)) {
+            if (currentCursorHasBeenFetched(current, cursors)) {
                 return cursors
             }
 
@@ -124,7 +123,6 @@ const Search = ({ show, setShow }) => {
                         to: toJoinObj.to,
                         next: toJoinObj.next
                     }
-
                     const newArr = cursors.map(c => {
                         if (c === currObj) {
                             return newObj
@@ -144,6 +142,7 @@ const Search = ({ show, setShow }) => {
                     })
                     return newArr.filter(c => c !== null)
                 }
+
             } else if (previousHasBeenFetched()) {
                 const newArr = cursors.map(c => {
                     if (current === c.next) {
@@ -157,6 +156,7 @@ const Search = ({ show, setShow }) => {
                     return c
                 })
                 return newArr
+
             } else {
                 const newObj = {
                     from: current,
@@ -184,13 +184,13 @@ const Search = ({ show, setShow }) => {
 
             // if data has not been fetched before, update storage from api data
             const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
-            if (!currentHasBeenFetched(currentCursor, cursorsFromStorage)) {
+            if (!currentCursorHasBeenFetched(currentCursor, cursorsFromStorage)) {
                 const games = result.data.data
                 for (let game of games) {
                     updateStorage(game)
                 }
             }
-            
+
             // update cursors
             const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
             localStorage.setItem("cursors", JSON.stringify(updatedCursors))
@@ -199,13 +199,30 @@ const Search = ({ show, setShow }) => {
         }
 
         fetchData()
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentCursor]);
 
+    useEffect(() => {
+        // poll for new data every 2 min
+        const pollData = async () => {
+            const result = await axios.get(API_URL)
+            const cursor = result.data.cursor.split("=")[1]
+            const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+
+            if (!currentCursorHasBeenFetched(cursor, cursorsFromStorage)) {
+                setCurrentCursor(cursor)
+            }
+        }
+
+        window.setInterval(() => {
+            pollData()
+        }, 120_000) // 2min
+
+    }, [])
+
     const handlePlayerClick = (player) => {
-        setShowPlayerStats(true)
         setSelectedPlayer(player)
+        setShowPlayerStats(true)
     }
 
     return (
