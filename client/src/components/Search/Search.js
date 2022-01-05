@@ -13,7 +13,7 @@ const Search = ({ show, setShow }) => {
 
     const [currentCursor, setCurrentCursor] = useState("")
 
-    const updatePlayersFromStorage = () => {
+    const updatePlayersNames = () => {
         const isName = (str) => {
             return str.split(" ").length === 2
         }
@@ -22,7 +22,7 @@ const Search = ({ show, setShow }) => {
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (isName(key)) {
-                const playerName = localStorage.key(i);
+                const playerName = key;
                 playersFromStorage.push(playerName)
             }
         }
@@ -30,7 +30,7 @@ const Search = ({ show, setShow }) => {
     }
 
     useEffect(() => {
-        updatePlayersFromStorage()
+        updatePlayersNames()
     }, [])
 
     useEffect(() => {
@@ -67,8 +67,18 @@ const Search = ({ show, setShow }) => {
             updatePlayerStats(game.playerA.name, game.playerA.played, game)
             updatePlayerStats(game.playerB.name, game.playerB.played, game)
             if (!players.includes(game.playerA.name) || !players.includes(game.playerB.name)) {
-                updatePlayersFromStorage()
+                updatePlayersNames()
             }
+        }
+
+        const currentHasBeenFetched = (current, cursors) => {
+            if (cursors) {
+                for (let c of cursors) {
+                    if (c.from === current) {
+                        return true
+                    }
+                }
+            } return false
         }
 
         const updateCursors = (current, next, cursors) => {
@@ -81,13 +91,9 @@ const Search = ({ show, setShow }) => {
                 return [newObj]
             }
 
-            const currentHasBeenFetched = () => {
-                for (let c of cursors) {
-                    if (c.from === current) {
-                        return true
-                    }
-                }
-                return false
+
+            if (currentHasBeenFetched(current, cursors)) {
+                return cursors
             }
 
             const nextHasBeenFetched = () => {
@@ -106,10 +112,6 @@ const Search = ({ show, setShow }) => {
                     }
                 }
                 return false
-            }
-
-            if (currentHasBeenFetched()) {
-                return cursors
             }
 
             if (nextHasBeenFetched()) {
@@ -169,7 +171,7 @@ const Search = ({ show, setShow }) => {
             const result = await axios.get(API_URL + currentCursor)
             const nextCursor = result.data.cursor === null ? null : result.data.cursor.split("=")[1]
 
-            // first page of api, move to next page
+            // first page of api
             if (currentCursor === "") {
                 setCurrentCursor(nextCursor)
                 return
@@ -180,14 +182,16 @@ const Search = ({ show, setShow }) => {
                 return
             }
 
-            // update storage from api data
-            const games = result.data.data
-            for (let game of games) {
-                updateStorage(game)
-            }
-
-            // update cursors
+            // if data has not been fetched before, update storage from api data
             const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+            if (!currentHasBeenFetched(currentCursor, cursorsFromStorage)) {
+                const games = result.data.data
+                for (let game of games) {
+                    updateStorage(game)
+                }
+            }
+            
+            // update cursors
             const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
             localStorage.setItem("cursors", JSON.stringify(updatedCursors))
             setCurrentCursor(updatedCursors[updatedCursors.length - 1].next)
@@ -196,6 +200,7 @@ const Search = ({ show, setShow }) => {
 
         fetchData()
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentCursor]);
 
     const handlePlayerClick = (player) => {
