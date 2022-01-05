@@ -1,28 +1,29 @@
+import React from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useEffect, useState } from "react";
-import { playerWonGame } from '../../logic/rps';
-import { API_URL } from '../../utils/constants';
-import MenuButton from '../Utility/MenuButton';
-import PlayerStats from './PlayerStats';
+import { playerWonGame } from '../../logic/rps'
+import { API_URL } from '../../utils/constants'
+import MenuButton from '../Utility/MenuButton'
+import PlayerStats from './PlayerStats'
 
 const Search = ({ show, setShow }) => {
     const [players, setPlayers] = useState([])
-    const [filter, setFilter] = useState("")
-    const [selectedPlayer, setSelectedPlayer] = useState("")
+    const [filter, setFilter] = useState('')
+    const [selectedPlayer, setSelectedPlayer] = useState('')
     const [showPlayerStats, setShowPlayerStats] = useState(false)
 
-    const [currentCursor, setCurrentCursor] = useState("")
+    const [currentCursor, setCurrentCursor] = useState('')
 
     const updatePlayersNames = () => {
         const isName = (str) => {
-            return str.split(" ").length === 2
+            return str.split(' ').length === 2
         }
 
         let playersFromStorage = []
         for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
+            const key = localStorage.key(i)
             if (isName(key)) {
-                const playerName = key;
+                const playerName = key
                 playersFromStorage.push(playerName)
             }
         }
@@ -52,9 +53,9 @@ const Search = ({ show, setShow }) => {
                     gamesPlayed: 1,
                     gamesWon: won ? 1 : 0,
                     handsPlayed: {
-                        ROCK: played === "ROCK" ? 1 : 0,
-                        PAPER: played === "PAPER" ? 1 : 0,
-                        SCISSORS: played === "SCISSORS" ? 1 : 0,
+                        ROCK: played === 'ROCK' ? 1 : 0,
+                        PAPER: played === 'PAPER' ? 1 : 0,
+                        SCISSORS: played === 'SCISSORS' ? 1 : 0,
                     }
                 }
                 localStorage.setItem(name, JSON.stringify(dataObj))
@@ -64,9 +65,9 @@ const Search = ({ show, setShow }) => {
                     gamesPlayed: currentStats.gamesPlayed + 1,
                     gamesWon: won ? currentStats.gamesWon + 1 : currentStats.gamesWon,
                     handsPlayed: {
-                        ROCK: played === "ROCK" ? currentStats.handsPlayed.ROCK + 1 : currentStats.handsPlayed.ROCK,
-                        PAPER: played === "PAPER" ? currentStats.handsPlayed.PAPER + 1 : currentStats.handsPlayed.PAPER,
-                        SCISSORS: played === "SCISSORS" ? currentStats.handsPlayed.SCISSORS + 1 : currentStats.handsPlayed.SCISSORS,
+                        ROCK: played === 'ROCK' ? currentStats.handsPlayed.ROCK + 1 : currentStats.handsPlayed.ROCK,
+                        PAPER: played === 'PAPER' ? currentStats.handsPlayed.PAPER + 1 : currentStats.handsPlayed.PAPER,
+                        SCISSORS: played === 'SCISSORS' ? currentStats.handsPlayed.SCISSORS + 1 : currentStats.handsPlayed.SCISSORS,
                     }
                 }
                 localStorage.setItem(name, JSON.stringify(newObj))
@@ -169,10 +170,10 @@ const Search = ({ show, setShow }) => {
 
         const fetchData = async () => {
             const result = await axios.get(API_URL + currentCursor)
-            const nextCursor = result.data.cursor === null ? null : result.data.cursor.split("=")[1]
+            const nextCursor = result.data.cursor === null ? null : result.data.cursor.split('=')[1]
 
             // first page of api
-            if (currentCursor === "") {
+            if (currentCursor === '') {
                 setCurrentCursor(nextCursor)
                 return
             }
@@ -183,7 +184,7 @@ const Search = ({ show, setShow }) => {
             }
 
             // if data has not been fetched before, update storage from api data
-            const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+            const cursorsFromStorage = JSON.parse(localStorage.getItem('cursors'))
             if (!currentCursorHasBeenFetched(currentCursor, cursorsFromStorage)) {
                 const games = result.data.data
                 for (let game of games) {
@@ -193,21 +194,21 @@ const Search = ({ show, setShow }) => {
 
             // update cursors
             const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
-            localStorage.setItem("cursors", JSON.stringify(updatedCursors))
+            localStorage.setItem('cursors', JSON.stringify(updatedCursors))
             setCurrentCursor(updatedCursors[updatedCursors.length - 1].next)
 
         }
 
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentCursor]);
+
+    }, [currentCursor])
 
     useEffect(() => {
         // poll for new data every 2 min
         const pollData = async () => {
             const result = await axios.get(API_URL)
-            const cursor = result.data.cursor.split("=")[1]
-            const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+            const cursor = result.data.cursor.split('=')[1]
+            const cursorsFromStorage = JSON.parse(localStorage.getItem('cursors'))
 
             if (!currentCursorHasBeenFetched(cursor, cursorsFromStorage)) {
                 setCurrentCursor(cursor)
@@ -226,9 +227,9 @@ const Search = ({ show, setShow }) => {
     }
 
     return (
-        <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
+        <div className={show ? 'search-component-container visible' : 'search-component-container hidden'}>
             <PlayerStats visible={showPlayerStats} setVisible={setShowPlayerStats} player={selectedPlayer} />
-            <MenuButton handleClick={() => setShow(false)} icon="x" />
+            <MenuButton handleClick={() => setShow(false)} icon='x' />
             <FilterInput handleChange={(e) => setFilter(e.target.value)} />
             <PlayerList players={players} filter={filter} handleClick={handlePlayerClick} />
         </div>
@@ -238,20 +239,20 @@ const Search = ({ show, setShow }) => {
 const FilterInput = ({ handleChange }) => {
     return (
         <input
-            className="search-input"
-            type="text"
-            placeholder="Search by name"
+            className='search-input'
+            type='text'
+            placeholder='Search by name'
             onChange={handleChange} />
     )
 }
 
 const PlayerList = ({ players, filter, handleClick }) => {
     return (
-        <div className="player-list">
+        <div className='player-list'>
             {players.sort().map(p => {
                 return p.toLowerCase().includes(filter.toLowerCase())
                     && <div
-                        className="player-search-item"
+                        className='player-search-item'
                         onClick={() => handleClick(p)}
                         key={p}>{p}
                     </div>

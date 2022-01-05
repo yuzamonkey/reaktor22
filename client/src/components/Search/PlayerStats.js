@@ -1,7 +1,8 @@
-const PlayerStats = ({ visible, setVisible, player }) => {
+import React from 'react'
 
+const PlayerStats = ({ visible, setVisible, player }) => {
     return (
-        <div className={visible ? "player-stats-component visible" : "player-stats-component hidden"}>
+        <div className={visible ? 'player-stats-component visible' : 'player-stats-component hidden'}>
             <h1>{player}</h1>
             <Stats name={player} />
             <BackButton handleClick={() => setVisible(false)} />
@@ -14,11 +15,11 @@ const Stats = ({ name }) => {
 
     const mostPlayedHand = (handsPlayed) => {
         if (handsPlayed.ROCK >= handsPlayed.PAPER && handsPlayed.ROCK >= handsPlayed.SCISSORS) {
-            return "ROCK"
+            return 'ROCK'
         } else if (handsPlayed.PAPER >= handsPlayed.ROCK && handsPlayed.PAPER >= handsPlayed.SCISSORS) {
-            return "PAPER"
+            return 'PAPER'
         } else {
-            return "SCISSORS"
+            return 'SCISSORS'
         }
     }
 
@@ -38,7 +39,7 @@ const Stats = ({ name }) => {
     }
 
     return (
-        <span className="player-stats">
+        <span className='player-stats'>
             <h3>Games played: <b>{stats?.gamesPlayed}</b></h3>
             <h3>Games won: <b>{stats?.gamesWon}</b></h3>
             <h3>Winning percentage: <b>{getWinPercent()}%</b></h3>
@@ -50,7 +51,7 @@ const Stats = ({ name }) => {
 
 const BackButton = ({ handleClick }) => {
     return (
-        <div className="back-button" onClick={handleClick}>❮</div>
+        <div className='back-button' onClick={handleClick}>❮</div>
     )
 }
 

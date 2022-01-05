@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { WS_URL } from '../../utils/constants'
 import GameInfo from './GameInfo'
@@ -41,15 +42,15 @@ const Live = () => {
 
     const sortedGames = (g1, g2) => {
         if (g1.type !== g2.type) {
-            return g1.type === "GAME_RESULT" ? -1 : 1
+            return g1.type === 'GAME_RESULT' ? -1 : 1
         }
-        else if (g1.type === "GAME_RESULT") {
+        else if (g1.type === 'GAME_RESULT') {
             return g2.t - g1.t
         }
     }
 
     return (
-        <div className="live-component-container">
+        <div className='live-component-container'>
             <h2>LIVE</h2>
             {games.sort(sortedGames).map(game => {
                 return (
