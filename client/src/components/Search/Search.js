@@ -73,52 +73,87 @@ const Search = ({ show, setShow }) => {
             }
         }
 
-        // const nextCursorIsAlreadyHandled = (next, cursors) => {
-        //     for (let c of cursors) {
-        //         if (next === c.first) {
-        //             return true
-        //         }
-        //     }
-        //     return false
-        // }
-
         const updateCursors = (current, next, cursors) => {
-            const updatedCursors = cursors.map(obj => {
-                if (current === obj.next) {
-                    return { ...obj, to: current, next: next }
+
+            if (!cursors) {
+                const newObj = {
+                    from: current,
+                    to: current,
+                    next: next
                 }
-                return obj
-            })
+                return [newObj]
+            }
 
-            let removeList = []
-
-            const objIsToBeRemoved = (obj, removeList) => {
-                for (let item of removeList) {
-                    if (obj.from === item.from
-                        && obj.to === item.to
-                        && obj.next === item.next) {
+            const nextHasBeenFetched = () => {
+                for (let c of cursors) {
+                    if (c.from === next) {
                         return true
                     }
                 }
                 return false
             }
 
-            const joined = updatedCursors.map(obj => {
-                const toJoin = updatedCursors.filter(c => obj.next === c.from)[0]
-                if (toJoin) {
-                    removeList.push(toJoin)
-                    const joinedObj = {
-                        from: obj.from,
-                        to: toJoin.to,
-                        next: toJoin.next
+            const previousHasBeenFetched = () => {
+                for (let c of cursors) {
+                    if (c.next === current) {
+                        return true
                     }
-                    return joinedObj
                 }
-                return obj
-            })
+                return false
+            }
 
-            const filteredCursors = joined.filter(c => c !== undefined && !objIsToBeRemoved(c, removeList))
-            return filteredCursors
+            if (nextHasBeenFetched()) {
+                const currObj = cursors.filter(c => c.next === current)[0]
+                const toJoinObj = cursors.filter(c => c.from === next)[0]
+                console.log("HAS BEEN FETCHED, JOIN", currObj, toJoinObj)
+
+                if (currObj) {
+                    const newObj = {
+                        from: currObj.from,
+                        to: toJoinObj.to,
+                        next: toJoinObj.next
+                    }
+
+                    const newArr = cursors.map(c => {
+                        if (c === currObj) {
+                            return newObj
+                        }
+                        if (c === toJoinObj) {
+                            return null
+                        }
+                        return c
+                    })
+                    return newArr.filter(c => c !== null)
+                } else {
+                    const newArr = cursors.map(c => {
+                        if (c === toJoinObj) {
+                            return { ...toJoinObj, from: current }
+                        }
+                        return c
+                    })
+                    return newArr.filter(c => c !== null)
+                }
+            } else if (previousHasBeenFetched()) {
+                const newArr = cursors.map(c => {
+                    if (current === c.next) {
+                        const newObj = {
+                            from: c.from,
+                            to: current,
+                            next: next
+                        }
+                        return newObj
+                    }
+                    return c
+                })
+                return newArr
+            } else {
+                const newObj = {
+                    from: current,
+                    to: current,
+                    next: next
+                }
+                return cursors.concat(newObj)
+            }
         }
 
         const fetchData = async () => {
@@ -142,23 +177,12 @@ const Search = ({ show, setShow }) => {
                 updateStorage(game)
             }
 
+            // update cursors
             const cursorsFromStorage = JSON.parse(localStorage.getItem("cursors"))
+            const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
+            localStorage.setItem("cursors", JSON.stringify(updatedCursors))
+            setCurrentCursor(updatedCursors[updatedCursors.length - 1].next)
 
-            if (cursorsFromStorage === null) {
-                const cursors = [{
-                    from: currentCursor,
-                    to: currentCursor,
-                    next: nextCursor
-                }]
-                localStorage.setItem("cursors", JSON.stringify(cursors))
-                setCurrentCursor(nextCursor)
-                return
-            } else {
-                //jatka tästä, uusi api sivu ei liitä vanhempiin
-                const updatedCursors = updateCursors(currentCursor, nextCursor, cursorsFromStorage)
-                localStorage.setItem("cursors", JSON.stringify(updatedCursors))
-                setCurrentCursor(updatedCursors[0].next)
-            }
         }
         fetchData()
     }, [currentCursor]);
