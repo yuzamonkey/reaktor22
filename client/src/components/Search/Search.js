@@ -10,7 +10,7 @@ const Search = ({ show, setShow }) => {
     const [filter, setFilter] = useState("")
     const [selectedPlayer, setSelectedPlayer] = useState("")
     const [showPlayerStats, setShowPlayerStats] = useState(false)
-    
+
     const [currentCursor, setCurrentCursor] = useState("")
 
     const updatePlayersFromStorage = () => {
@@ -72,7 +72,6 @@ const Search = ({ show, setShow }) => {
         }
 
         const updateCursors = (current, next, cursors) => {
-
             if (!cursors) {
                 const newObj = {
                     from: current,
@@ -80,6 +79,15 @@ const Search = ({ show, setShow }) => {
                     next: next
                 }
                 return [newObj]
+            }
+
+            const currentHasBeenFetched = () => {
+                for (let c of cursors) {
+                    if (c.from === current) {
+                        return true
+                    }
+                }
+                return false
             }
 
             const nextHasBeenFetched = () => {
@@ -98,6 +106,10 @@ const Search = ({ show, setShow }) => {
                     }
                 }
                 return false
+            }
+
+            if (currentHasBeenFetched()) {
+                return cursors
             }
 
             if (nextHasBeenFetched()) {

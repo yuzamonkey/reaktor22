@@ -43,7 +43,7 @@ h1, h2, h3, h4 {
     padding: 10px;
     background-color: var(--bc-solid);
     color: var(--white);
-    box-shadow: 0 0 2px 0 var(--bc-solid-dark);
+    box-shadow: 0 0 5px 0 var(--bc-solid-dark);
 
     /* display: flex;
     justify-content: space-between;
