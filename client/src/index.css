@@ -4,7 +4,7 @@
     --bc-solid: hsl(200, 50%, 40%);
     --bc-solid-dark: hsl(200, 50%, 24%);
     --white: hsl(0, 0%, 90%);
-    --gray:  hsl(200, 20%, 80%);
+    --gray: hsl(200, 20%, 80%);
     --search-component-width: 35rem;
 }
 
@@ -98,7 +98,8 @@ h1, h2, h3, h4 {
 .game-info-middle-container {
     width: 100%;
 }
-.game-info-middle-container > p {
+
+.game-info-middle-container>p {
     text-align: center;
 }
 
@@ -110,6 +111,7 @@ h1, h2, h3, h4 {
     justify-content: center;
     align-items: center;
 }
+
 .player-info-container.won {
     box-shadow: 0 0 10px 0 var(--bc-solid) inset;
 }
@@ -151,7 +153,7 @@ h1, h2, h3, h4 {
 
 .search-component-container .menu-button {
     align-self: flex-end;
-    padding: .3em .8em ;
+    padding: .3em .8em;
 }
 
 .search-input {
@@ -196,6 +198,10 @@ h1, h2, h3, h4 {
 
 .player-stats-component.hidden {
     right: calc(var(--search-component-width) * -1.2);
+}
+
+.player-stats>h3 {
+    font-weight: 300;
 }
 
 .back-button {

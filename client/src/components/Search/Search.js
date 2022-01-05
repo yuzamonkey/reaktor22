@@ -6,13 +6,11 @@ import MenuButton from '../Utility/MenuButton';
 import PlayerStats from './PlayerStats';
 
 const Search = ({ show, setShow }) => {
-    //
     const [players, setPlayers] = useState([])
     const [filter, setFilter] = useState("")
     const [selectedPlayer, setSelectedPlayer] = useState("")
     const [showPlayerStats, setShowPlayerStats] = useState(false)
-    //
-
+    
     const [currentCursor, setCurrentCursor] = useState("")
 
     const updatePlayersFromStorage = () => {
@@ -105,7 +103,6 @@ const Search = ({ show, setShow }) => {
             if (nextHasBeenFetched()) {
                 const currObj = cursors.filter(c => c.next === current)[0]
                 const toJoinObj = cursors.filter(c => c.from === next)[0]
-                console.log("HAS BEEN FETCHED, JOIN", currObj, toJoinObj)
 
                 if (currObj) {
                     const newObj = {
@@ -184,12 +181,10 @@ const Search = ({ show, setShow }) => {
             setCurrentCursor(updatedCursors[updatedCursors.length - 1].next)
 
         }
-        fetchData()
-    }, [currentCursor]);
 
-    const handleInputChange = (value) => {
-        setFilter(value)
-    }
+        fetchData()
+
+    }, [currentCursor]);
 
     const handlePlayerClick = (player) => {
         setShowPlayerStats(true)
@@ -200,7 +195,7 @@ const Search = ({ show, setShow }) => {
         <div className={show ? "search-component-container visible" : "search-component-container hidden"}>
             <PlayerStats visible={showPlayerStats} setVisible={setShowPlayerStats} player={selectedPlayer} />
             <MenuButton handleClick={() => setShow(false)} icon="x" />
-            <FilterInput handleChange={handleInputChange} />
+            <FilterInput handleChange={(e) => setFilter(e.target.value)} />
             <PlayerList players={players} filter={filter} handleClick={handlePlayerClick} />
         </div>
     )
@@ -212,7 +207,7 @@ const FilterInput = ({ handleChange }) => {
             className="search-input"
             type="text"
             placeholder="Search by name"
-            onChange={e => handleChange(e.target.value)} />
+            onChange={handleChange} />
     )
 }
 
