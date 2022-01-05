@@ -4,7 +4,7 @@ import GameInfo from './GameInfo'
 
 const Live = () => {
     const [games, setGames] = useState([])
-    const maxNumOfGames = 10
+    const maxNumOfGames = 100
 
     useEffect(() => {
         const socket = new WebSocket(WS_URL)
@@ -27,7 +27,11 @@ const Live = () => {
             if (gamesIncludeNewGame(id)) {
                 setGames(replaceGameInGames(id, newGame))
             } else {
-                setGames(games.concat(newGame))
+                if (games.length > maxNumOfGames) {
+                    setGames(games.slice(0, Math.floor(maxNumOfGames * 0.8)).concat(newGame))
+                } else {
+                    setGames(games.concat(newGame))
+                }
             }
         }
         return () => {
