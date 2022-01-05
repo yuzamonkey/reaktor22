@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
+import { WS_URL } from '../../utils/constants'
 import GameInfo from './GameInfo'
 
 const Live = () => {
     const [games, setGames] = useState([])
-    const link = "ws://bad-api-assignment.reaktor.com/rps/live"
+    const maxNumOfGames = 10
 
     useEffect(() => {
-        const socket = new WebSocket(link)
+        const socket = new WebSocket(WS_URL)
 
         const gamesIncludeNewGame = (id) => {
             return games.map(g => g.gameId).includes(id)
@@ -23,10 +24,10 @@ const Live = () => {
             const parsed = JSON.parse(JSON.parse(data))
             const newGame = { ...parsed, time: new Date() }
             const id = newGame.gameId
-            if (!gamesIncludeNewGame(id)) {
-                setGames(games.concat(newGame))
-            } else {
+            if (gamesIncludeNewGame(id)) {
                 setGames(replaceGameInGames(id, newGame))
+            } else {
+                setGames(games.concat(newGame))
             }
         }
         return () => {
