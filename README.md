@@ -2,4 +2,4 @@
 For summer 2022, Jussi-Jaakko Mankki
 
 ## Links
-https://pacific-falls-89093.herokuapp.com/
+https://rps-jm-reaktor22.herokuapp.com/
